@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WriteWise AI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #05070d;
+      --panel: rgba(15, 23, 42, 0.82);
+      --panel-light: rgba(30, 41, 59, 0.72);
+      --border: rgba(148, 163, 184, 0.18);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --subtle: #94a3b8;
+      --brand: #8b5cf6;
+      --brand-2: #22d3ee;
+      --danger: #fb7185;
+      --success: #34d399;
+      --warning: #f59e0b;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(139, 92, 246, 0.24), transparent 32%),
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 30%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1160px, 92%);
+      margin: 0 auto;
+      padding: 42px 0 56px;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 58px;
+      animation: fadeIn 0.7s ease both;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--brand);
+      font-size: 1.12rem;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #020617;
+      font-weight: 950;
+      box-shadow: 0 16px 44px rgba(139, 92, 246, 0.35);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .nav-actions a:hover {
+      color: var(--brand);
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .hero h1 {
+      max-width: 780px;
+      font-size: clamp(2.8rem, 7vw, 5.8rem);
+      line-height: 0.94;
+      letter-spacing: -0.08em;
+      margin-bottom: 24px;
+      animation: riseIn 0.8s ease both;
+    }
+
+    .hero h1 span {
+      color: var(--brand);
+      text-shadow: 0 0 34px rgba(139, 92, 246, 0.48);
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.8;
+      margin-bottom: 28px;
+      animation: fadeIn 0.8s ease 0.1s both;
+    }
+
+    .primary-button,
+    .secondary-button {
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      background: var(--brand);
+      color: white;
+      font-weight: 900;
+      box-shadow: 0 18px 48px rgba(139, 92, 246, 0.32);
+    }
+
+    .secondary-button {
+      padding: 13px 18px;
+      background: rgba(148, 163, 184, 0.08);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-weight: 800;
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 34px;
+      animation: fadeIn 0.8s ease 0.18s both;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      animation: fadeIn 0.8s ease 0.28s both;
+    }
+
+    .card,
+    .feature-card,
+    .side-card,
+    .result-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    .feature-card {
+      padding: 20px;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(139, 92, 246, 0.55);
+      box-shadow: 0 24px 70px rgba(139, 92, 246, 0.2);
+    }
+
+    .feature-card strong {
+      display: block;
+      color: var(--brand);
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.04em;
+    }
+
+    .feature-card span {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .side-card {
+      padding: 24px;
+      animation: bubbleIn 0.8s ease 0.18s both;
+    }
+
+    .side-card h2 {
+      font-size: 1.4rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .side-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-item {
+      padding: 15px;
+      border-radius: 18px;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .mini-item strong {
+      display: block;
+      color: var(--brand-2);
+      margin-bottom: 5px;
+    }
+
+    .mini-item span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .tool-section {
+      display: none;
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .tool-section.active {
+      display: block;
+    }
+
+    .section-title {
+      margin-bottom: 24px;
+    }
+
+    .section-title h1 {
+      font-size: clamp(2.3rem, 5vw, 4.4rem);
+      line-height: 1;
+      letter-spacing: -0.07em;
+      margin-bottom: 12px;
+      animation: riseIn 0.75s ease both;
+    }
+
+    .section-title h1 span {
+      color: var(--brand);
+    }
+
+    .section-title p {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 720px;
+    }
+
+    .checker-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .input-card,
+    .feedback-card {
+      padding: 22px;
+    }
+
+    .input-card label {
+      display: block;
+      font-size: 1.04rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(2, 6, 23, 0.5);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 320px;
+      resize: vertical;
+      padding: 16px;
+      line-height: 1.7;
+    }
+
+    select {
+      padding: 13px 14px;
+    }
+
+    textarea:focus,
+    select:focus {
+      border-color: rgba(139, 92, 246, 0.72);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .helper {
+      color: var(--subtle);
+      line-height: 1.55;
+      font-size: 0.88rem;
+      margin-top: 8px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .feedback-card {
+      min-height: 520px;
+    }
+
+    .empty-state {
+      height: 100%;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--subtle);
+      line-height: 1.7;
+      padding: 20px;
+    }
+
+    .score-circle {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--brand) var(--score-angle), rgba(148, 163, 184, 0.12) 0deg);
+      position: relative;
+    }
+
+    .score-circle::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      background: #0f172a;
+    }
+
+    .score-circle strong {
+      position: relative;
+      z-index: 1;
+      font-size: 1.8rem;
+    }
+
+    .feedback-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .result-card {
+      padding: 16px;
+      background: rgba(2, 6, 23, 0.36);
+      box-shadow: none;
+    }
+
+    .result-card h3 {
+      font-size: 1rem;
+      color: var(--brand-2);
+      margin-bottom: 8px;
+    }
+
+    .result-card p,
+    .result-card li {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.94rem;
+    }
+
+    .result-card ul {
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.14);
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      color: #ede9fe;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .warning-text {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(251, 113, 133, 0.12);
+      color: #fecdd3;
+      border: 1px solid rgba(251, 113, 133, 0.24);
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 980px) {
+      .home-grid,
+      .checker-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .navbar {
+        align-items: flex-start;
+        gap: 18px;
+        flex-direction: column;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="navbar">
+      <a href="#home" class="logo" id="homeLink">
+        <div class="logo-mark">W</div>
+        <span>WriteWise AI</span>
+      </a>
+      <div class="nav-actions">
+        <a href="#home" id="navHome">Home</a>
+        <a href="#checker" id="navChecker">Writing checker</a>
+      </div>
+    </nav>
+
+    <section id="homeSection">
+      <div class="home-grid">
+        <section class="hero">
+          <h1>Improve your writing with an <span>AI coach</span>.</h1>
+          <p>Paste your writing, choose your purpose, and receive clear feedback to make your sentences sharper, cleaner, and more effective.</p>
+
+          <div class="hero-actions">
+            <a href="#checker" class="primary-button" id="startButton">Start analysing</a>
+            <button class="secondary-button" id="sampleButton">Try sample text</button>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-card">
+              <strong>Score</strong>
+              <span>Get a quick writing score based on clarity, length, vocabulary, and sentence control.</span>
+            </div>
+            <div class="feature-card">
+              <strong>Fix</strong>
+              <span>Spot weak habits such as overused words, long sentences, and unclear phrasing.</span>
+            </div>
+            <div class="feature-card">
+              <strong>Improve</strong>
+              <span>Receive a better version that keeps your meaning but strengthens your expression.</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side-card">
+          <h2>What this first version can do</h2>
+          <p>This prototype does not use a real AI API yet. It uses simple writing rules to simulate analysis while keeping the website fully usable.</p>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Checks sentence length</strong>
+              <span>Warns you if your writing may feel too heavy or hard to follow.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Finds weak words</strong>
+              <span>Looks for words like “very”, “really”, “nice”, and “good”.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Gives next steps</strong>
+              <span>Suggests what to focus on when rewriting your work.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="checkerSection" class="tool-section">
+      <div class="section-title">
+        <h1>Writing <span>checker</span></h1>
+        <p>Paste a paragraph, composition, story, reflection, email, or speech. The analyser will score it and give practical feedback.</p>
+      </div>
+
+      <div class="checker-grid">
+        <section class="card input-card">
+          <label for="writingInput">Paste your writing here</label>
+          <textarea id="writingInput" placeholder="Paste your writing here. Example: a paragraph, composition, reflection, speech, or email."></textarea>
+          <p class="helper">For better feedback, paste at least 80 words.</p>
+
+          <div class="form-row">
+            <div>
+              <label for="writingType">Writing type</label>
+              <select id="writingType">
+                <option value="composition">Composition</option>
+                <option value="story">Story</option>
+                <option value="essay">Essay</option>
+                <option value="reflection">Reflection</option>
+                <option value="email">Email</option>
+                <option value="speech">Speech</option>
+              </select>
+            </div>
+            <div>
+              <label for="writingGoal">Goal</label>
+              <select id="writingGoal">
+                <option value="clearer">Make it clearer</option>
+                <option value="professional">Make it more professional</option>
+                <option value="emotional">Make it more emotional</option>
+                <option value="concise">Make it more concise</option>
+                <option value="vocabulary">Improve vocabulary</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="primary-button" id="analyseButton">Analyse writing</button>
+            <button class="secondary-button" id="clearButton">Clear</button>
+          </div>
+
+          <div class="warning-text" id="warningBox"></div>
+        </section>
+
+        <section class="card feedback-card" id="feedbackCard">
+          <div class="empty-state" id="emptyState">
+            <div>
+              <h2>Your feedback will appear here.</h2>
+              <p>Paste your writing and click “Analyse writing” to receive a score, strengths, weaknesses, and rewriting advice.</p>
+            </div>
+          </div>
+
+          <div id="feedbackResults" style="display: none;"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const homeSection = document.getElementById('homeSection');
+    const checkerSection = document.getElementById('checkerSection');
+    const homeLink = document.getElementById('homeLink');
+    const navHome = document.getElementById('navHome');
+    const navChecker = document.getElementById('navChecker');
+    const startButton = document.getElementById('startButton');
+    const sampleButton = document.getElementById('sampleButton');
+    const writingInput = document.getElementById('writingInput');
+    const writingType = document.getElementById('writingType');
+    const writingGoal = document.getElementById('writingGoal');
+    const analyseButton = document.getElementById('analyseButton');
+    const clearButton = document.getElementById('clearButton');
+    const warningBox = document.getElementById('warningBox');
+    const emptyState = document.getElementById('emptyState');
+    const feedbackResults = document.getElementById('feedbackResults');
+
+    const weakWords = ['very', 'really', 'nice', 'good', 'bad', 'thing', 'stuff', 'a lot', 'big', 'small'];
+
+    function showPage(page) {
+      const isChecker = page === 'checker';
+      homeSection.style.display = isChecker ? 'none' : 'block';
+      checkerSection.classList.toggle('active', isChecker);
+      window.scrollTo({ top: 0, behaviour: 'smooth' });
+    }
+
+    function handleRoute(event, page) {
+      event.preventDefault();
+      window.location.hash = page;
+      showPage(page);
+    }
+
+    homeLink.addEventListener('click', event => handleRoute(event, 'home'));
+    navHome.addEventListener('click', event => handleRoute(event, 'home'));
+    navChecker.addEventListener('click', event => handleRoute(event, 'checker'));
+    startButton.addEventListener('click', event => handleRoute(event, 'checker'));
+
+    sampleButton.addEventListener('click', () => {
+      window.location.hash = 'checker';
+      showPage('checker');
+      writingInput.value = 'The first thing I realised was that the room felt different. Everyone was talking like usual, but Joey was sitting alone with his bag half-zipped and his eyes fixed on the floor. I wanted to ask what was wrong, but the words stayed stuck in my throat. He had always been the loudest one in our group, the person who made even boring lessons feel less heavy. That day, however, he looked like he was carrying something none of us could see.';
+      writingType.value = 'story';
+      writingGoal.value = 'emotional';
+      analyseWriting();
+    });
+
+    function splitSentences(text) {
+      return text
+        .replace(/\s+/g, ' ')
+        .split(/[.!?]+/)
+        .map(sentence => sentence.trim())
+        .filter(Boolean);
+    }
+
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    function findWeakWords(text) {
+      const lowerText = text.toLowerCase();
+      return weakWords.filter(word => lowerText.includes(word));
+    }
+
+    function getRepeatedWords(text) {
+      const words = text
+        .toLowerCase()
+        .replace(/[^a-z\s]/g, '')
+        .split(/\s+/)
+        .filter(word => word.length > 4);
+
+      const counts = {};
+      words.forEach(word => {
+        counts[word] = (counts[word] || 0) + 1;
+      });
+
+      return Object.entries(counts)
+        .filter(([, count]) => count >= 3)
+        .map(([word]) => word)
+        .slice(0, 5);
+    }
+
+    function calculateScore(wordCount, averageSentenceLength, weakWordCount, repeatedWordCount) {
+      let score = 6.5;
+
+      if (wordCount >= 80) score += 0.8;
+      if (wordCount >= 150) score += 0.5;
+      if (averageSentenceLength >= 10 && averageSentenceLength <= 24) score += 1;
+      if (averageSentenceLength > 30) score -= 1.1;
+      if (weakWordCount === 0) score += 0.8;
+      if (weakWordCount >= 4) score -= 0.8;
+      if (repeatedWordCount >= 2) score -= 0.6;
+
+      return Math.max(1, Math.min(10, Math.round(score * 10) / 10));
+    }
+
+    function buildImprovement(text, goal) {
+      let improved = text.trim();
+
+      improved = improved.replace(/\bvery good\b/gi, 'strong');
+      improved = improved.replace(/\breally good\b/gi, 'effective');
+      improved = improved.replace(/\bvery bad\b/gi, 'serious');
+      improved = improved.replace(/\bnice\b/gi, 'pleasant');
+      improved = improved.replace(/\bthings\b/gi, 'details');
+      improved = improved.replace(/\bstuff\b/gi, 'details');
+      improved = improved.replace(/\ba lot of\b/gi, 'many');
+
+      if (goal === 'professional') {
+        improved = improved.replace(/\bi think\b/gi, 'I believe');
+        improved = improved.replace(/\bkind of\b/gi, 'somewhat');
+      }
+
+      if (goal === 'concise') {
+        improved = improved.replace(/\bin order to\b/gi, 'to');
+        improved = improved.replace(/\bdue to the fact that\b/gi, 'because');
+      }
+
+      return improved;
+    }
+
+    function analyseWriting() {
+      const text = writingInput.value.trim();
+      warningBox.style.display = 'none';
+
+      if (!text) {
+        warningBox.textContent = 'Please paste some writing before analysing.';
+        warningBox.style.display = 'block';
+        return;
+      }
+
+      const wordCount = countWords(text);
+      const sentences = splitSentences(text);
+      const averageSentenceLength = sentences.length ? Math.round(wordCount / sentences.length) : wordCount;
+      const weakFound = findWeakWords(text);
+      const repeatedWords = getRepeatedWords(text);
+      const score = calculateScore(wordCount, averageSentenceLength, weakFound.length, repeatedWords.length);
+      const scoreAngle = Math.round((score / 10) * 360);
+      const improvedVersion = buildImprovement(text, writingGoal.value);
+
+      const strengths = [];
+      const weaknesses = [];
+      const nextSteps = [];
+
+      if (wordCount >= 80) strengths.push('Your writing has enough length for the analyser to understand your ideas.');
+      else weaknesses.push('The writing is quite short, so your ideas may need more development.');
+
+      if (averageSentenceLength >= 10 && averageSentenceLength <= 24) strengths.push('Your sentence length is generally controlled and readable.');
+      else if (averageSentenceLength > 24) weaknesses.push('Some sentences may be too long, which can make the writing harder to follow.');
+      else weaknesses.push('Your sentences may be too short, so the writing could feel underdeveloped.');
+
+      if (weakFound.length === 0) strengths.push('You avoided common weak words, which helps your writing sound more precise.');
+      else weaknesses.push(`You used some weak or general words: ${weakFound.join(', ')}.`);
+
+      if (repeatedWords.length > 0) weaknesses.push(`Some words appear repeatedly: ${repeatedWords.join(', ')}.`);
+      else strengths.push('There are no obvious repeated words that stand out strongly.');
+
+      if (writingGoal.value === 'clearer') nextSteps.push('Break complicated ideas into shorter, cleaner sentences.');
+      if (writingGoal.value === 'professional') nextSteps.push('Use precise wording and avoid casual phrases where possible.');
+      if (writingGoal.value === 'emotional') nextSteps.push('Add sensory details, internal thoughts, and small actions to show emotion.');
+      if (writingGoal.value === 'concise') nextSteps.push('Remove repeated ideas and replace long phrases with shorter alternatives.');
+      if (writingGoal.value === 'vocabulary') nextSteps.push('Replace general words with more specific and vivid vocabulary.');
+
+      nextSteps.push('After editing, read your paragraph aloud to check whether the flow feels natural.');
+
+      emptyState.style.display = 'none';
+      feedbackResults.style.display = 'block';
+      feedbackResults.innerHTML = `
+        <div class="score-circle" style="--score-angle: ${scoreAngle}deg;"><strong>${score}/10</strong></div>
+        <div class="badge-row">
+          <span class="badge">${wordCount} words</span>
+          <span class="badge">${sentences.length} sentences</span>
+          <span class="badge">${averageSentenceLength} words per sentence</span>
+          <span class="badge">${writingType.value}</span>
+        </div>
+
+        <div class="feedback-list">
+          <div class="result-card">
+            <h3>Strengths</h3>
+            <ul>${strengths.map(item => `<li>${item}</li>`).join('')}</ul>
+          </div>
+
+          <div class="result-card">
+            <h3>Weaknesses</h3>
+            <ul>${weaknesses.map(item => `<li>${item}</li>`).join('') || '<li>No major weakness detected in this rule-based version.</li>'}</ul>
+          </div>
+
+          <div class="result-card">
+            <h3>Suggested improvement</h3>
+            <p>${improvedVersion}</p>
+          </div>
+
+          <div class="result-card">
+            <h3>Next step</h3>
+            <ul>${nextSteps.map(item => `<li>${item}</li>`).join('')}</ul>
+          </div>
+        </div>
+      `;
+    }
+
+    analyseButton.addEventListener('click', analyseWriting);
+
+    clearButton.addEventListener('click', () => {
+      writingInput.value = '';
+      warningBox.style.display = 'none';
+      feedbackResults.style.display = 'none';
+      emptyState.style.display = 'grid';
+    });
+
+    const initialPage = window.location.hash.replace('#', '') === 'checker' ? 'checker' : 'home';
+    showPage(initialPage);
+  </script>
+</body>
+</html>
